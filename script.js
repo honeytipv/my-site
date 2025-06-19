@@ -9,7 +9,7 @@ const products = [
     title: "트랄랄레로 트랄랄라 인형",
     link: "https://link.coupang.com/a/czNwDC",
   },
-  // 2, 3 등 추가 가능
+  // 더 추가 가능
 ];
 
 function renderProducts(filter = "") {
@@ -40,21 +40,32 @@ searchInput.addEventListener("input", () => {
   renderProducts(val);
 });
 
-// 모달 처리
+// ⬇ 모달 관련 수정 포함
 const modal = document.getElementById("feedbackModal");
 const openModalBtn = document.getElementById("openModal");
 const closeModalBtn = document.getElementById("closeModal");
+const topBar = document.querySelector(".top-bar");
+const container = document.querySelector(".container");
 
 openModalBtn.addEventListener("click", () => {
   modal.style.display = "block";
+  topBar.style.display = "none";
+  container.style.display = "none";
+  document.body.style.overflow = "hidden";
 });
 
 closeModalBtn.addEventListener("click", () => {
   modal.style.display = "none";
+  topBar.style.display = "flex";
+  container.style.display = "flex";
+  document.body.style.overflow = "auto";
 });
 
 window.addEventListener("click", (e) => {
   if (e.target === modal) {
     modal.style.display = "none";
+    topBar.style.display = "flex";
+    container.style.display = "flex";
+    document.body.style.overflow = "auto";
   }
 });
