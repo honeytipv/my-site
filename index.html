@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>내 사이트</title>
+    <title>개꿀팁</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -24,9 +24,23 @@
     <div id="feedbackModal" class="modal">
       <div class="modal-content">
         <span id="closeModal" class="close-button">×</span>
+
+        <p style="font-size: 15px; font-weight: bold; color: red; margin-bottom: 15px;">
+          본 동의문을 자세히 보지 않고 [동의] 또는 [보내기]를 클릭하였더라도, 모든 내용을 충분히 숙지하고 동의한 것으로 간주됩니다. 반드시 확인 바랍니다.
+        </p>
+
         <form action="https://formspree.io/f/mnnvzjvp" method="POST">
-          <input type="email" name="email" placeholder="이메일 주소를 입력하세요" required />
-          <textarea name="message" placeholder="의견 사항을 입력해주세요..." required></textarea>
+          <input
+            type="email"
+            name="email"
+            placeholder="이메일 주소를 입력하세요"
+            required
+          />
+          <textarea
+            name="message"
+            placeholder="의견 사항을 입력해주세요..."
+            required
+          ></textarea>
           <button type="submit">보내기</button>
         </form>
       </div>
