@@ -124,8 +124,9 @@ body {
   color: #888;
 }
 
+/* 여기 textarea 너비도 이메일칸과 맞춰 95%로 줄임 */
 .modal-content textarea {
-  width: 100%;
+  width: 95%;
   height: 100px;
   margin-bottom: 10px;
   padding: 10px;
@@ -152,7 +153,7 @@ body {
   color: black;
 }
 
-/* ✅ 추가된 부분: form-wrapper로 전체 아래로 내림 */
+/* form-wrapper로 전체 아래로 내림 */
 .form-wrapper {
   margin-top: 70px;
 }
