@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>개꿀팁</title>
+  <title>개꿀팁 - 의견센터 이메일 인증</title>
   <script type="module" src="https://cdn.emailjs.com/sdk/3.12.0/email.min.js"></script>
   <style>
     body {
@@ -75,7 +75,25 @@
       white-space: pre-wrap;
       max-height: 80vh;
       overflow-y: auto;
+
+      /* 스크롤바 스타일 */
+      scrollbar-width: thin;        /* Firefox */
+      scrollbar-color: #555 #ddd;   /* Firefox */
     }
+    /* Chrome, Edge, Safari 스크롤바 */
+    #lawModal .modal-law-content::-webkit-scrollbar {
+      width: 12px;      /* 두껍게 조정 */
+    }
+    #lawModal .modal-law-content::-webkit-scrollbar-track {
+      background: #ddd;
+      border-radius: 6px;
+    }
+    #lawModal .modal-law-content::-webkit-scrollbar-thumb {
+      background-color: #555;
+      border-radius: 6px;
+      border: 3px solid #ddd;
+    }
+
     #lawModal .close-button {
       position: absolute;
       top: 10px;
@@ -307,107 +325,99 @@
     });
 
     document.getElementById("openModal").addEventListener("click", () => {
-      document.getElementById("feedbackModal").style.display = "block";
-    });
-    document.getElementById("closeModal").addEventListener("click", () => {
-      document.getElementById("feedbackModal").style.display = "none";
-    });
-    document.getElementById("closeOtpModal").addEventListener("click", () => {
+      document.getElementById("openModal").addEventListener("click", () => {
+  document.getElementById("feedbackModal").style.display = "block";
+});
+
+document.getElementById("closeModal").addEventListener("click", () => {
+  document.getElementById("feedbackModal").style.display = "none";
+});
+
+document.getElementById("closeOtpModal").addEventListener("click", () => {
+  document.getElementById("otpModal").style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+  const feedbackModal = document.getElementById("feedbackModal");
+  const otpModal = document.getElementById("otpModal");
+  const lawModal = document.getElementById("lawModal");
+  if (e.target === feedbackModal) feedbackModal.style.display = "none";
+  if (e.target === otpModal) otpModal.style.display = "none";
+  if (e.target === lawModal) lawModal.style.display = "none";
+});
+
+// 이메일 인증번호 생성 함수
+function generateOTP(length = 6) {
+  let otp = "";
+  for (let i = 0; i < length; i++) {
+    otp += Math.floor(Math.random() * 10);
+  }
+  return otp;
+}
+
+let currentOTP = "";
+let pendingForm = null;
+
+// 1. 의견 보내기 눌렀을 때: 인증번호 발송 후 OTP 모달 띄우기
+document.getElementById("feedbackForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  // 이메일, 메시지 값 확인
+  const email = this.user_email.value.trim();
+  const message = this.message.value.trim();
+  if (!email || !message) {
+    alert("이메일과 의견 내용을 모두 입력해주세요.");
+    return;
+  }
+
+  // OTP 생성
+  currentOTP = generateOTP();
+
+  // 이메일로 OTP 전송 (emailjs 사용)
+  // 여기서 OTP 전송용 템플릿 아이디 따로 만들어야 함.
+  emailjs.send("service_x70u0xh", "template_otp_send", {
+    to_email: email,
+    otp_code: currentOTP,
+  }).then(() => {
+    alert("인증번호가 이메일로 전송되었습니다. 메일함을 확인해주세요.");
+    document.getElementById("feedbackModal").style.display = "none";
+    document.getElementById("otpModal").style.display = "block";
+    pendingForm = this; // 제출 보류 폼 저장
+  }).catch((error) => {
+    alert("인증번호 전송 실패: " + JSON.stringify(error));
+  });
+});
+
+// 2. OTP 확인 후 진짜 의견 전송
+document.getElementById("verifyOtpBtn").addEventListener("click", () => {
+  const inputOtp = document.getElementById("otpInput").value.trim();
+
+  if (inputOtp.length !== 6) {
+    alert("6자리 인증번호를 정확히 입력해주세요.");
+    return;
+  }
+
+  if (inputOtp !== currentOTP) {
+    alert("인증번호가 일치하지 않습니다. 다시 확인해주세요.");
+    return;
+  }
+
+  // OTP 일치 -> 실제 의견 전송
+  if (!pendingForm) {
+    alert("폼 데이터가 없습니다. 다시 시도해주세요.");
+    return;
+  }
+
+  emailjs.sendForm("service_x70u0xh", "template_62q5w2q", pendingForm)
+    .then(() => {
+      alert("성공적으로 의견이 전송되었습니다!");
+      pendingForm.reset();
+      currentOTP = "";
+      pendingForm = null;
+      document.getElementById("otpInput").value = "";
       document.getElementById("otpModal").style.display = "none";
+    })
+    .catch((error) => {
+      alert("의견 전송 실패: " + JSON.stringify(error));
     });
-
-    window.addEventListener("click", (e) => {
-      const feedbackModal = document.getElementById("feedbackModal");
-      const lawModal = document.getElementById("lawModal");
-      const otpModal = document.getElementById("otpModal");
-      if (e.target === feedbackModal) feedbackModal.style.display = "none";
-      if (e.target === lawModal) lawModal.style.display = "none";
-      if (e.target === otpModal) otpModal.style.display = "none";
-    });
-
-    let currentOtp = "";
-    let tempFormData = {};
-
-    document.getElementById("feedbackForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-
-      const email = document.getElementById("userEmail").value.trim();
-      const message = document.getElementById("userMessage").value.trim();
-
-      if (!email || !message) {
-        alert("이메일과 의견을 모두 입력해 주세요.");
-        return;
-      }
-
-      currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
-
-      try {
-        await emailjs.send("service_x70u0xh", "template_62q5w2q", {
-          user_email: email,
-          otp_code: currentOtp
-        });
-        alert("인증번호가 이메일로 전송되었습니다.");
-        tempFormData = { user_email: email, message: message };
-        document.getElementById("feedbackModal").style.display = "none";
-        document.getElementById("otpModal").style.display = "block";
-      } catch (error) {
-        alert("인증번호 전송 실패: " + JSON.stringify(error));
-      }
-    });
-
-    document.getElementById("verifyOtpBtn").addEventListener("click", async () => {
-      const enteredOtp = document.getElementById("otpInput").value.trim();
-      if (enteredOtp === currentOtp) {
-        try {
-          await emailjs.send("service_x70u0xh", "template_62q5w2q", tempFormData);
-          alert("의견이 성공적으로 전송되었습니다!");
-          document.getElementById("otpModal").style.display = "none";
-          document.getElementById("otpInput").value = "";
-          document.getElementById("feedbackForm").reset();
-        } catch (error) {
-          alert("의견 전송 실패: " + JSON.stringify(error));
-        }
-      } else {
-        alert("인증번호가 일치하지 않습니다.");
-      }
-    });
-
-    const products = [
-      {
-        number: "1",
-        image:
-          "https://thumbnail9.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/91d7/4ba4cc9def1ff057f50b1d95b68dbc418a1e9e785a6c2597961ebf28daa2.jpg",
-        title: "트랄랄레로 트랄랄라 인형",
-        link: "https://link.coupang.com/a/czNwDC",
-      }
-    ];
-
-    function renderProducts(filter = "") {
-      const results = document.getElementById("results");
-      results.innerHTML = "";
-      const filtered = products.filter(p => !filter || p.number === filter);
-      filtered.forEach(product => {
-        const box = document.createElement("div");
-        box.className = "product-box";
-        box.innerHTML = `
-          <a href="${product.link}" target="_blank" class="product-link">
-            <div class="product-info">
-              <div class="product-number">${product.number}</div>
-              <img src="${product.image}" alt="product ${product.number}" />
-            </div>
-            <div class="title">${product.title}</div>
-          </a>`;
-        results.appendChild(box);
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const input = document.getElementById("searchInput");
-      input.addEventListener("input", () => {
-        renderProducts(input.value.trim());
-      });
-      renderProducts();
-    });
-  </script>
-</body>
-</html>
+});
