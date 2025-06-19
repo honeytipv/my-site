@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <title>내 사이트</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="top-bar">
-    <input type="text" id="searchInput" placeholder="숫자를 검색하세요 (예: 1)" />
-    <div class="help-box" id="openModal">
-      <img
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoYnzdTBQO1svckSLMMg75P7ZQ51xkkMyccbffdrJ2&s"
-        alt="고객센터"
-        class="help-icon"
-      />
-      <div class="label">의견센터</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>내 사이트</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <input type="text" id="searchInput" placeholder="숫자를 검색하세요 (예: 1)" />
+      <div class="help-box" id="openModal">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoYnzdTBQO1svckSLMMg75P7ZQ51xkkMyccbffdrJ2&s"
+          alt="고객센터"
+          class="help-icon"
+        />
+        <div class="label">의견센터</div>
+      </div>
     </div>
-  </div>
 
-  <div class="container" id="results"></div>
+    <div class="container" id="results"></div>
 
-  <div id="feedbackModal" class="modal">
-    <div class="modal-content">
-      <span id="closeModal" class="close-button">×</span>
-      <form action="https://formspree.io/f/mnnvzjvp" method="POST">
-        <input type="email" name="email" placeholder="이메일 주소를 입력하세요" required />
-        <textarea name="message" placeholder="의견 사항을 입력해주세요..." required></textarea>
-        <button type="submit">보내기</button>
-      </form>
+    <div id="feedbackModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModal" class="close-button">×</span>
+        <form action="https://formspree.io/f/mnnvzjvp" method="POST">
+          <input type="email" name="email" placeholder="이메일 주소를 입력하세요" required />
+          <textarea name="message" placeholder="의견 사항을 입력해주세요..." required></textarea>
+          <button type="submit">보내기</button>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
