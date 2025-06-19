@@ -1,139 +1,48 @@
-body {
-  font-family: sans-serif;
+/* 기본 리셋 */
+* {
   margin: 0;
   padding: 0;
-  background-color: #fff;
-  font-size: 24px; /* 전체 기본 글자 크게 */
-}
-
-.top-bar {
-  display: flex;
-  flex-direction: column; /* 위아래로 배치 */
-  align-items: center;
-  padding: 20px;
-  gap: 20px;
-}
-
-#searchInput {
-  width: 100%;
-  padding: 20px;
-  border: 3px solid purple;
-  border-radius: 10px;
-  font-size: 24px;
   box-sizing: border-box;
 }
-
-.help-box {
+body {
+  font-family: sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
-  width: 120px;
-  gap: 10px;
+  padding: 40px;
+  background-color: #fefefe;
 }
-
-.help-icon {
-  width: 80px;
-  height: 80px;
-}
-
-.label {
-  font-size: 20px;
-  text-align: center;
-}
-
-.container {
-  padding: 20px;
+.search-bar {
   display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.product-box {
-  border: 3px solid #ddd;
-  border-radius: 20px;
-  padding: 20px;
-  background-color: #f9f9f9;
-}
-
-.product-link {
-  text-decoration: none;
-  color: black;
-}
-
-.product-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.product-number {
-  font-weight: bold;
-  font-size: 28px;
-  min-width: 40px;
-  text-align: center;
-}
-
-.product-info img {
-  width: 180px;
-  height: auto;
-  border-radius: 10px;
-}
-
-.title {
-  margin-top: 20px;
-  font-size: 22px;
-}
-
-/* 모달 */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 99;
-  left: 0;
-  top: 0;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  max-width: 400px;
 }
-
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  width: 95%;
-  max-width: 500px;
-  margin: 150px auto;
-  position: relative;
+#searchInput {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 18px;
+  border: 2px solid purple;
+  border-radius: 5px 0 0 5px;
+  outline: none;
 }
-
-.modal-content input,
-.modal-content textarea {
-  width: 100%;
-  margin-bottom: 20px;
-  padding: 20px;
-  font-size: 20px;
+#searchInput:focus {
+  border-color: darkmagenta;
 }
-
-.modal-content textarea {
-  height: 160px;
-  resize: vertical;
-}
-
-.modal-content button {
-  padding: 20px 30px;
-  background: purple;
+#searchBtn {
+  padding: 0 20px;
+  background-color: purple;
   color: white;
-  border: none;
+  border: 2px solid purple;
+  border-left: none;
+  font-size: 18px;
+  border-radius: 0 5px 5px 0;
   cursor: pointer;
-  border-radius: 10px;
-  font-size: 20px;
 }
-
-.close-button {
-  position: absolute;
-  right: 20px;
-  top: 15px;
-  font-size: 32px;
-  cursor: pointer;
+#searchBtn:hover {
+  background-color: darkmagenta;
+}
+#results {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 400px;
 }
