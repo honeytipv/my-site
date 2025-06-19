@@ -5,6 +5,7 @@ body {
   background-color: #fff;
 }
 
+/* 기존 스타일 유지 */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -15,13 +16,14 @@ body {
 
 #searchInput {
   flex: 1;
-  padding: 12px;
+  padding: 14px 16px;  /* 좀 더 넓게 */
   border: 2px solid purple;
   border-radius: 5px;
   max-width: 100%;
   min-width: 200px;
-  font-size: 16px;
+  font-size: 18px;  /* 글자크기 키움 */
   margin-right: 10px;
+  box-sizing: border-box;
 }
 
 .help-box {
@@ -29,32 +31,32 @@ body {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  width: 70px;
+  width: 80px; /* 조금 키움 */
   margin-top: 10px;
 }
 
 .help-icon {
-  width: 40px;
-  height: 40px;
+  width: 50px;  /* 아이콘 크기 키움 */
+  height: 50px;
 }
 
 .label {
-  font-size: 13px;
+  font-size: 14px;  /* 글자 크기 키움 */
   text-align: center;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .container {
-  padding: 10px;
+  padding: 15px;  /* 패딩 약간 증가 */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 }
 
 .product-box {
   border: 1px solid #ddd;
   border-radius: 10px;
-  padding: 10px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   background-color: #f9f9f9;
@@ -68,25 +70,25 @@ body {
 .product-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .product-number {
   font-weight: bold;
-  font-size: 18px;
-  min-width: 20px;
+  font-size: 20px;  /* 숫자 크기 키움 */
+  min-width: 25px;
   text-align: center;
 }
 
 .product-info img {
-  width: 120px;
+  width: 140px; /* 이미지 크기 키움 */
   height: auto;
   border-radius: 5px;
 }
 
 .title {
-  margin-top: 10px;
-  font-size: 16px;
+  margin-top: 12px;
+  font-size: 18px; /* 제목 글자 키움 */
 }
 
 /* 모달 */
@@ -103,41 +105,96 @@ body {
 
 .modal-content {
   background: white;
-  padding: 20px;
+  padding: 25px;
   border-radius: 10px;
   width: 90%;
   max-width: 400px;
-  margin: 100px auto;
+  margin: 120px auto;
   position: relative;
 }
 
 .modal-content input,
 .modal-content textarea {
   width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  font-size: 15px;
+  margin-bottom: 12px;
+  padding: 12px;
+  font-size: 16px;
 }
 
 .modal-content textarea {
-  height: 100px;
+  height: 120px;
   resize: vertical;
 }
 
 .modal-content button {
-  padding: 10px 20px;
+  padding: 12px 24px;
   background: purple;
   color: white;
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .close-button {
   position: absolute;
   right: 15px;
   top: 10px;
-  font-size: 24px;
+  font-size: 26px;
   cursor: pointer;
+}
+
+/* 반응형: 화면 너비가 480px 이하인 모바일 대응 */
+@media (max-width: 480px) {
+  #searchInput {
+    min-width: unset;
+    font-size: 20px;
+    padding: 14px 20px;
+    margin-right: 0;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .help-box {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 0;
+    gap: 8px;
+  }
+
+  .help-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .label {
+    font-size: 16px;
+    margin-top: 0;
+    line-height: 45px;
+  }
+
+  .product-info img {
+    width: 100px;
+  }
+
+  .product-number {
+    font-size: 22px;
+    min-width: 30px;
+  }
+
+  .title {
+    font-size: 17px;
+  }
+
+  .modal-content {
+    margin: 60px 10px;
+    padding: 20px;
+    max-width: 95%;
+  }
 }
