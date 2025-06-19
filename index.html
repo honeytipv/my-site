@@ -7,49 +7,65 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- 동의 화면 -->
+    <div id="consentScreen" class="consent-overlay">
+      <div class="consent-box">
+        <div class="consent-header">
+          <!-- 저작권 문구 -->
+          <div class="copyright">© 2025 개꿀팁. 무단 복제 및 재배포 금지.</div>
+        </div>
+        <!-- 빨간 안내문 -->
+        <div class="attention">※ 아래 '자세히 보기' 내용을 꼭 확인해주세요.</div>
 
-    <!-- ✅ 화면에 실제로 보이는 저작권 텍스트 -->
-    <div class="copyright-banner">
-      © 2025 개꿀팁. 무단 복제 및 재배포 금지.
-    </div>
+        <!-- 제목 -->
+        <h2 class="consent-title">메일 송신 시스템 악용에 대한 법적 책임 동의</h2>
 
-    <!-- 기존 검색창 + 의견센터 -->
-    <div class="top-bar">
-      <input type="text" id="searchInput" placeholder="숫자를 검색하세요 (예: 1)" />
-      <div class="help-box" id="openModal">
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoYnzdTBQO1svckSLMMg75P7ZQ51xkkMyccbffdrJ2&s"
-          alt="고객센터"
-          class="help-icon"
-        />
-        <div class="label">의견센터</div>
+        <!-- 버튼 영역 -->
+        <div class="consent-buttons">
+          <button id="consentAgree">동의</button>
+          <button id="consentDetail">자세히 보기</button>
+        </div>
+
+        <!-- 자세히 보기 내용 -->
+        <div id="consentDetailText" class="consent-detail hidden">
+          <p><strong>[의견 제출 기능 이용에 대한 고지 및 법적 동의서]</strong></p>
+          <p>본 웹페이지의 의견 제출 기능은 외부 메일 처리 서비스(Formspree.io)의 송신 인터페이스를 기반으로 운영되며, 사용자가 입력한 이메일 주소 및 의견 내용은 운영자에게 직접 전달됩니다.</p>
+          <p>이에 따라 사용자는 의견 제출 이전에 다음 사항을 충분히 숙지하고, 이에 전적으로 동의한 것으로 간주됩니다.</p>
+          <ol>
+            <li>본 페이지 내 스크립트에 포함된 Formspree 메일 송신 경로 또는 링크를 임의로 열람·조작하거나, 타인의 메일 주소를 무단으로 도용하여 메시지를 전송하는 행위는 부정 접속 및 기능 변조로 간주될 수 있습니다.</li>
+            <li>수신자 이메일 주소를 대상으로 욕설, 도배, 광고, 비방, 모욕, 성적 표현, 협박 등 사회적으로 부적절하거나 법률 위반 소지가 있는 내용을 반복적으로 전송할 경우, 「형법」 및 「정보통신망법」 등에 따라 민·형사상 법적 책임이 발생할 수 있습니다.</li>
+            <li>본 시스템은 서버 로그를 수집하거나 IP 정보를 기록하지 않지만, 전송된 메시지 및 메일 수신 시점 등의 기록은 보존될 수 있으며, 운영자 판단에 따라 법적 조치를 요청할 수 있습니다.</li>
+          </ol>
+          <p>사용자는 위 사항을 충분히 이해하였으며, 이에 전적으로 동의합니다.</p>
+        </div>
       </div>
     </div>
 
-    <div class="container" id="results"></div>
+    <!-- 실제 사이트 콘텐츠 -->
+    <div id="mainApp" style="display: none">
+      <div class="top-bar">
+        <input type="text" id="searchInput" placeholder="숫자를 검색하세요 (예: 1)" />
+        <div class="help-box" id="openModal">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoYnzdTBQO1svckSLMMg75P7ZQ51xkkMyccbffdrJ2&s"
+            alt="고객센터"
+            class="help-icon"
+          />
+          <div class="label">의견센터</div>
+        </div>
+      </div>
 
-    <div id="feedbackModal" class="modal">
-      <div class="modal-content">
-        <span id="closeModal" class="close-button">×</span>
+      <div class="container" id="results"></div>
 
-        <div class="form-wrapper">
-          <p style="font-size: 15px; font-weight: bold; color: red; margin-bottom: 15px;">
-            본 동의문을 자세히 보지 않고 [동의] 또는 [보내기]를 클릭하였더라도,
-            모든 내용을 충분히 숙지하고 동의한 것으로 간주됩니다. 반드시 확인 바랍니다.
+      <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+          <span id="closeModal" class="close-button">×</span>
+          <p class="consent-warning">
+            본 동의문을 자세히 보지 않고 [동의] 또는 [보내기]를 클릭하였더라도, 모든 내용을 충분히 숙지하고 동의한 것으로 간주됩니다. 반드시 확인 바랍니다.
           </p>
-
           <form action="https://formspree.io/f/mnnvzjvp" method="POST">
-            <input
-              type="email"
-              name="email"
-              placeholder="이메일 주소를 입력하세요"
-              required
-            />
-            <textarea
-              name="message"
-              placeholder="의견 사항을 입력해주세요..."
-              required
-            ></textarea>
+            <input type="email" name="email" placeholder="이메일 주소를 입력하세요" required />
+            <textarea name="message" placeholder="의견 사항을 입력해주세요..." required></textarea>
             <button type="submit">보내기</button>
           </form>
         </div>
