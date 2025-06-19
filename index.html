@@ -6,7 +6,7 @@
     <title>개꿀팁</title>
     <link rel="stylesheet" href="style.css" />
     <style>
-      /* 동의서 화면 스타일 */
+      /* 동의서 시작 화면 */
       #consentScreen {
         position: fixed;
         z-index: 99999;
@@ -41,19 +41,6 @@
         cursor: pointer;
       }
 
-      .consent-detail {
-        margin-top: 20px;
-        display: none;
-        white-space: pre-wrap;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      /* 저작권 텍스트 */
       #copyright {
         position: absolute;
         top: 10px;
@@ -61,22 +48,56 @@
         font-size: 12px;
         color: #666;
       }
+
+      /* 법적 고지 모달 */
+      .modal-law {
+        display: none;
+        position: fixed;
+        z-index: 100000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+      }
+
+      .modal-law-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 600px;
+        margin: 100px auto;
+        position: relative;
+        white-space: pre-wrap;
+      }
+
+      .modal-law .close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
-    <!-- 동의서 화면 -->
+    <!-- 처음 뜨는 동의서 화면 -->
     <div id="consentScreen">
       <div id="copyright">© 2025 개꿀팁. 무단 복제 및 재배포 금지.</div>
-
       <p class="notice">※ 의견센터 기능을 이용하려면 아래 자세히 보기를 반드시 확인해 주세요.</p>
-
       <div class="consent-buttons">
         <button id="consentAgree">동의</button>
-        <button id="consentDetail">자세히 보기</button>
+        <button id="showLawModal">자세히 보기</button>
       </div>
+    </div>
 
-      <div id="consentDetailText" class="consent-detail">
-        <strong>[의견 제출 기능 이용에 대한 고지 및 법적 동의서]</strong><br /><br />
+    <!-- 법적 고지 모달 -->
+    <div id="lawModal" class="modal-law">
+      <div class="modal-law-content">
+        <span class="close-button" id="closeLawModal">×</span>
+        <strong>[의견 제출 기능 이용에 대한 고지 및 법적 동의서]</strong>
+
         본 웹페이지의 의견 제출 기능은 외부 메일 처리 서비스(Formspree.io)의 송신 인터페이스를 기반으로 운영되며, 사용자가 입력한 이메일 주소 및 의견 내용은 운영자에게 직접 전달됩니다.
 
         이에 따라 사용자는 의견 제출 이전에 다음 사항을 충분히 숙지하고, 이에 전적으로 동의한 것으로 간주됩니다.
@@ -91,8 +112,8 @@
       </div>
     </div>
 
-    <!-- 실제 앱 콘텐츠 -->
-    <div id="mainApp" class="hidden">
+    <!-- 본문 전체 앱 -->
+    <div id="mainApp" style="display: none;">
       <div class="top-bar">
         <input type="text" id="searchInput" placeholder="숫자를 검색하세요 (예: 1)" />
         <div class="help-box" id="openModal">
@@ -110,11 +131,9 @@
       <div id="feedbackModal" class="modal">
         <div class="modal-content">
           <span id="closeModal" class="close-button">×</span>
-
           <p style="font-size: 15px; font-weight: bold; color: red; margin-top: 30px;">
             본 동의문을 자세히 보지 않고 [동의] 또는 [보내기]를 클릭하였더라도, 모든 내용을 충분히 숙지하고 동의한 것으로 간주됩니다. 반드시 확인 바랍니다.
           </p>
-
           <form action="https://formspree.io/f/mnnvzjvp" method="POST">
             <input
               type="email"
@@ -134,17 +153,79 @@
       </div>
     </div>
 
-    <!-- 스크립트 삽입 -->
+    <!-- 스크립트 -->
     <script>
-      // "자세히 보기" 토글
-      document.getElementById("consentDetail").addEventListener("click", () => {
-        document.getElementById("consentDetailText").classList.toggle("hidden");
+      // 상품 표시 스크립트
+      const products = [
+        {
+          number: "1",
+          image:
+            "https://thumbnail9.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/91d7/4ba4cc9def1ff057f50b1d95b68dbc418a1e9e785a6c2597961ebf28daa2.jpg",
+          title: "트랄랄레로 트랄랄라 인형",
+          link: "https://link.coupang.com/a/czNwDC",
+        }
+      ];
+
+      function renderProducts(filter = "") {
+        const results = document.getElementById("results");
+        results.innerHTML = "";
+        const filtered = products.filter((p) => !filter || p.number === filter);
+
+        filtered.forEach((product) => {
+          const box = document.createElement("div");
+          box.className = "product-box";
+          box.innerHTML = `
+            <a href="${product.link}" target="_blank" class="product-link">
+              <div class="product-info">
+                <div class="product-number">${product.number}</div>
+                <img src="${product.image}" alt="product ${product.number}" />
+              </div>
+              <div class="title">${product.title}</div>
+            </a>
+          `;
+          results.appendChild(box);
+        });
+      }
+
+      // 검색 이벤트 연결
+      document.addEventListener("DOMContentLoaded", () => {
+        const input = document.getElementById("searchInput");
+        input.addEventListener("input", () => {
+          renderProducts(input.value.trim());
+        });
+
+        renderProducts();
       });
 
-      // 동의 클릭 시 실제 앱 보여주기
+      // 동의하면 메인 앱 보이기
       document.getElementById("consentAgree").addEventListener("click", () => {
         document.getElementById("consentScreen").style.display = "none";
-        document.getElementById("mainApp").classList.remove("hidden");
+        document.getElementById("mainApp").style.display = "block";
+      });
+
+      // 자세히 보기 모달 열고 닫기
+      document.getElementById("showLawModal").addEventListener("click", () => {
+        document.getElementById("lawModal").style.display = "block";
+      });
+
+      document.getElementById("closeLawModal").addEventListener("click", () => {
+        document.getElementById("lawModal").style.display = "none";
+      });
+
+      // 의견센터 모달 열기
+      document.getElementById("openModal").addEventListener("click", () => {
+        document.getElementById("feedbackModal").style.display = "block";
+      });
+
+      document.getElementById("closeModal").addEventListener("click", () => {
+        document.getElementById("feedbackModal").style.display = "none";
+      });
+
+      window.addEventListener("click", (e) => {
+        const modal = document.getElementById("feedbackModal");
+        const lawModal = document.getElementById("lawModal");
+        if (e.target === modal) modal.style.display = "none";
+        if (e.target === lawModal) lawModal.style.display = "none";
       });
     </script>
   </body>
