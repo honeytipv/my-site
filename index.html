@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>개꿀팁 - 의견센터 이메일 인증</title>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <title>개꿀팁</title>
+  <script type="module" src="https://cdn.emailjs.com/sdk/3.12.0/email.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -22,6 +22,7 @@
       left: 0;
       overflow-y: auto;
       padding: 30px 20px;
+      box-sizing: border-box;
     }
     #consentScreen p.notice {
       font-weight: bold;
@@ -30,16 +31,21 @@
     }
     .consent-buttons {
       margin-top: 20px;
+      display: flex;
+      justify-content: space-between; /* 왼쪽, 오른쪽 버튼 배치 */
+      max-width: 400px;
     }
     .consent-buttons button {
+      flex: 1;
       padding: 10px 18px;
       font-size: 16px;
-      margin-right: 10px;
       border-radius: 5px;
       border: none;
       background-color: purple;
       color: white;
       cursor: pointer;
+      margin: 0 5px;
+      user-select: none;
     }
     #copyright {
       position: absolute;
@@ -67,6 +73,8 @@
       margin: 100px auto;
       position: relative;
       white-space: pre-wrap;
+      max-height: 80vh;
+      overflow-y: auto;
     }
     #lawModal .close-button {
       position: absolute;
@@ -74,6 +82,7 @@
       right: 15px;
       font-size: 24px;
       cursor: pointer;
+      user-select: none;
     }
     #mainApp {
       display: none;
@@ -98,6 +107,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      user-select: none;
     }
     .help-icon {
       width: 35px;
@@ -165,6 +175,8 @@
       padding: 20px;
       position: relative;
       box-sizing: border-box;
+      max-height: 80vh;
+      overflow-y: auto;
     }
     .close-button {
       position: absolute;
@@ -194,7 +206,6 @@
       border: none;
       cursor: pointer;
     }
-
   </style>
 </head>
 <body>
@@ -278,17 +289,16 @@
     </div>
   </div>
 
-  <script>
-    // EmailJS 초기화 (Public Key)
-    emailjs.init("cEMhcSRW87GAAMaL7");
+  <script type="module">
+    import emailjs from "https://cdn.emailjs.com/sdk/3.12.0/email.min.js";
 
-    // 동의서 동의 버튼
+    emailjs.init("public_cEMhcSRW87GAAMaL7");
+
     document.getElementById("consentAgree").addEventListener("click", () => {
       document.getElementById("consentScreen").style.display = "none";
       document.getElementById("mainApp").style.display = "block";
     });
 
-    // 자세히 보기 모달 열기/닫기
     document.getElementById("showLawModal").addEventListener("click", () => {
       document.getElementById("lawModal").style.display = "block";
     });
@@ -296,36 +306,29 @@
       document.getElementById("lawModal").style.display = "none";
     });
 
-    // 의견센터 모달 열기/닫기
     document.getElementById("openModal").addEventListener("click", () => {
       document.getElementById("feedbackModal").style.display = "block";
     });
     document.getElementById("closeModal").addEventListener("click", () => {
       document.getElementById("feedbackModal").style.display = "none";
     });
-
-    // 인증번호 모달 닫기
     document.getElementById("closeOtpModal").addEventListener("click", () => {
       document.getElementById("otpModal").style.display = "none";
     });
 
-    // 바깥 클릭 시 모달 닫기
     window.addEventListener("click", (e) => {
       const feedbackModal = document.getElementById("feedbackModal");
       const lawModal = document.getElementById("lawModal");
       const otpModal = document.getElementById("otpModal");
-
       if (e.target === feedbackModal) feedbackModal.style.display = "none";
       if (e.target === lawModal) lawModal.style.display = "none";
       if (e.target === otpModal) otpModal.style.display = "none";
     });
 
-    // OTP 저장용 변수와 임시 폼 데이터 저장 변수
     let currentOtp = "";
     let tempFormData = {};
 
-    // 의견 제출 폼 제출 시 (이메일, 의견 작성 후 보내기 클릭)
-    document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+    document.getElementById("feedbackForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const email = document.getElementById("userEmail").value.trim();
@@ -336,45 +339,39 @@
         return;
       }
 
-      // 6자리 랜덤 OTP 생성
       currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
-      // EmailJS를 이용해 OTP 이메일 전송
-      emailjs.send("service_x70u0xh", "template_62q5w2q", {
-        user_email: email,
-        otp_code: currentOtp
-      }).then(() => {
+      try {
+        await emailjs.send("service_x70u0xh", "template_62q5w2q", {
+          user_email: email,
+          otp_code: currentOtp
+        });
         alert("인증번호가 이메일로 전송되었습니다.");
         tempFormData = { user_email: email, message: message };
-        // 의견 모달 닫고 OTP 모달 열기
         document.getElementById("feedbackModal").style.display = "none";
         document.getElementById("otpModal").style.display = "block";
-      }).catch((error) => {
+      } catch (error) {
         alert("인증번호 전송 실패: " + JSON.stringify(error));
-      });
+      }
     });
 
-    // 인증번호 확인 후 최종 의견 전송
-    document.getElementById("verifyOtpBtn").addEventListener("click", () => {
+    document.getElementById("verifyOtpBtn").addEventListener("click", async () => {
       const enteredOtp = document.getElementById("otpInput").value.trim();
-
       if (enteredOtp === currentOtp) {
-        // OTP 일치 시 의견 최종 전송
-        emailjs.send("service_x70u0xh", "template_62q5w2q", tempFormData)
-          .then(() => {
-            alert("의견이 성공적으로 전송되었습니다!");
-            document.getElementById("otpModal").style.display = "none";
-            document.getElementById("otpInput").value = "";
-            document.getElementById("feedbackForm").reset();
-          }).catch((error) => {
-            alert("의견 전송 실패: " + JSON.stringify(error));
-          });
+        try {
+          await emailjs.send("service_x70u0xh", "template_62q5w2q", tempFormData);
+          alert("의견이 성공적으로 전송되었습니다!");
+          document.getElementById("otpModal").style.display = "none";
+          document.getElementById("otpInput").value = "";
+          document.getElementById("feedbackForm").reset();
+        } catch (error) {
+          alert("의견 전송 실패: " + JSON.stringify(error));
+        }
       } else {
         alert("인증번호가 일치하지 않습니다.");
       }
     });
 
-    // 제품 데이터 (예시)
     const products = [
       {
         number: "1",
@@ -385,7 +382,6 @@
       }
     ];
 
-    // 제품 렌더링
     function renderProducts(filter = "") {
       const results = document.getElementById("results");
       results.innerHTML = "";
