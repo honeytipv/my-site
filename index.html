@@ -58,7 +58,7 @@
         top: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
       }
 
       .modal-law-content {
@@ -70,6 +70,10 @@
         margin: 100px auto;
         position: relative;
         white-space: pre-wrap;
+
+        /* 여기 추가된 부분 */
+        max-height: 80vh;
+        overflow-y: auto;
       }
 
       .modal-law .close-button {
@@ -155,7 +159,6 @@
 
     <!-- 스크립트 -->
     <script>
-      // 상품 표시 스크립트
       const products = [
         {
           number: "1",
@@ -170,7 +173,6 @@
         const results = document.getElementById("results");
         results.innerHTML = "";
         const filtered = products.filter((p) => !filter || p.number === filter);
-
         filtered.forEach((product) => {
           const box = document.createElement("div");
           box.className = "product-box";
@@ -187,7 +189,6 @@
         });
       }
 
-      // 검색 이벤트 연결
       document.addEventListener("DOMContentLoaded", () => {
         const input = document.getElementById("searchInput");
         input.addEventListener("input", () => {
@@ -197,13 +198,13 @@
         renderProducts();
       });
 
-      // 동의하면 메인 앱 보이기
+      // 동의하면 본문 보이기
       document.getElementById("consentAgree").addEventListener("click", () => {
         document.getElementById("consentScreen").style.display = "none";
         document.getElementById("mainApp").style.display = "block";
       });
 
-      // 자세히 보기 모달 열고 닫기
+      // 자세히 보기
       document.getElementById("showLawModal").addEventListener("click", () => {
         document.getElementById("lawModal").style.display = "block";
       });
@@ -212,7 +213,7 @@
         document.getElementById("lawModal").style.display = "none";
       });
 
-      // 의견센터 모달 열기
+      // 의견센터 모달
       document.getElementById("openModal").addEventListener("click", () => {
         document.getElementById("feedbackModal").style.display = "block";
       });
